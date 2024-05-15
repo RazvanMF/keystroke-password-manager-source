@@ -1,0 +1,83 @@
+@font-face {
+    font-family: Terminus;
+    src: url('../resources/fonts/TerminusTTFWindows-4.49.3.ttf');
+}
+
+body {
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+
+    user-select: none;
+}
+
+.main {
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    font-family: 'Arial Narrow', 'sans-serif';
+
+    display: flex;
+    flex-direction: column;
+}
+
+.warning-sign {
+    display: grid;
+    justify-items: center;
+
+    height: 15%;
+}
+
+.main-interactable-part {
+    display: flex;
+    flex-direction: row;
+
+    height: 70%;
+    gap: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.left-hand-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 50%;
+}
+
+.right-hand-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 50%;
+    align-items: center;
+}
+
+.registration-restoration {
+    height: 15%;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.registration {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-self: flex-start;
+    gap: 10px;
+}
+
+.restoration {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-self: flex-start;
+    gap: 10px;
+}

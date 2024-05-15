@@ -1,0 +1,6 @@
+@keystroke_backend_over_asp_HostAddress = http://localhost:5037
+
+GET {{keystroke_backend_over_asp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

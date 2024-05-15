@@ -1,0 +1,245 @@
+:root {
+    --orange: #ffaa00ff;
+    --fade-orange: #ff8000cd;
+    --white: #ffffffff;
+    --fade-white: #bbbbbbff;
+    --red: #ff0000ff;
+    --fade-red: #dd3300ff;
+}
+
+.--biggest {
+    font-size: 128px;
+    font-weight: 900;
+}
+
+.--bigger {
+    font-size: 72px;
+    font-weight: 900;
+}
+
+.--big {
+    font-size: 40px;
+    font-weight: 900;
+}
+
+.--medium {
+    font-size: 32px;
+    font-weight: 900;
+}
+
+.--white {
+    color: var(--white);
+    text-shadow: 1px 1px 1px var(--fade-white),
+    -1px 1px 1px var(--fade-white),
+    1px -1px 1px var(--fade-white),
+    -1px -1px 1px var(--fade-white);
+}
+
+.--orange {
+    color: var(--orange);
+    text-shadow: 1px 1px 1px var(--fade-orange),
+    -1px 1px 1px var(--fade-orange),
+    1px -1px 1px var(--fade-orange),
+    -1px -1px 1px var(--fade-orange);
+}
+
+.--red {
+    color: var(--red);
+    text-shadow: 1px 1px 1px var(--fade-red),
+    -1px 1px 1px var(--fade-red),
+    1px -1px 1px var(--fade-red),
+    -1px -1px 1px var(--fade-red);
+}
+
+.--bordered-orange {
+    border-radius: 8px;
+    border-style: solid;
+    border-width: 3px;
+    border-color: var(--orange);
+    box-shadow:
+            inset 0 0 0 1px var(--fade-orange),
+            0 0 0 1px var(--fade-orange);
+}
+
+.--bordered-red {
+    border-radius: 8px;
+    border-style: solid;
+    border-width: 3px;
+    box-shadow:
+            inset 0 0 0 1px var(--fade-red),
+            0 0 0 1px var(--fade-red);
+}
+
+.--bordered-white {
+    border-radius: 8px;
+    border-style: solid;
+    border-width: 3px;
+    box-shadow:
+            inset 0 0 0 1px var(--fade-white),
+            0 0 0 1px var(--fade-white);
+}
+
+.--pulsating {
+    animation: pulse 5s linear infinite;
+}
+
+.--centered {
+    display: inline;
+    text-align: center;
+}
+
+.--vertical-orange {
+    height: 50%;
+    width: 2px;
+    color: var(--orange);
+    background-color: var(--orange);
+    align-self: center;
+}
+
+.--vertical-white {
+    height: 90%;
+    width: 2px;
+    color: var(--white);
+    background-color: var(--white);
+    align-self: center;
+}
+
+.--extrapadded {
+    padding: 0 12px;
+}
+
+.--margined {
+    margin: 5px;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    25% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 0;
+    }
+    75% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.text-element {
+    display: inline-block;
+    letter-spacing: -1px;
+    padding: 0 5px;
+    align-self: start;
+    font-family: 'Arial Narrow', 'sans-serif';
+}
+
+.red-button {
+    background-color: var(--red);
+    box-shadow:
+            inset 0 0 0 1px var(--fade-red),
+            0 0 0 1px var(--fade-red);
+    border: 1px solid var(--fade-red);
+    border-radius: 3px;
+
+    font-family: "Arial Narrow", sans-serif;
+    font-size: 24px;
+    color: #000000ff;
+    text-shadow: 1px 1px 1px #222222ff,
+    -1px 1px 1px #222222ff,
+    1px -1px 1px #222222ff,
+    -1px -1px 1px #222222ff;
+    letter-spacing: 3px;
+    padding: 10px;
+    flex: 0;
+}
+
+.red-button:hover {
+    opacity: 0.8;
+}
+
+.input-orange {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+
+    font-family: Terminus, sans-serif;
+    font-size:24px;
+    background-color: var(--orange);
+    border: 1px solid var(--orange);
+}
+
+.input-orange:focus {
+    outline: none !important;
+    border: 1px solid var(--orange);
+}
+
+.input-red {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+
+    font-family: Terminus, sans-serif;
+    font-size:24px;
+    background-color: var(--red);
+    border: 1px solid var(--red);
+}
+
+.input-red:focus {
+    outline: none !important;
+    border: 1px solid var(--red);
+}
+
+.orange-button {
+    background-color: var(--orange);
+    box-shadow:
+            inset 0 0 0 1px var(--fade-orange),
+            0 0 0 1px var(--fade-orange);
+    border: 1px solid var(--fade-orange);
+    border-radius: 3px;
+
+    font-family: "Arial Narrow", sans-serif;
+    font-size: 24px;
+    color: #000000ff;
+    text-shadow: 1px 1px 1px #222222ff,
+    -1px 1px 1px #222222ff,
+    1px -1px 1px #222222ff,
+    -1px -1px 1px #222222ff;
+    letter-spacing: 3px;
+    padding: 10px;
+    flex: 0;
+}
+
+.orange-button:hover {
+    opacity: 0.8;
+}
+
+.white-button {
+    background-color: var(--white);
+    box-shadow:
+            inset 0 0 0 1px var(--fade-white),
+            0 0 0 1px var(--fade-white);
+    border: 1px solid var(--fade-white);
+    border-radius: 3px;
+
+    font-family: "Arial Narrow", sans-serif;
+    font-size: 24px;
+    color: #000000ff;
+    text-shadow: 1px 1px 1px #222222ff,
+    -1px 1px 1px #222222ff,
+    1px -1px 1px #222222ff,
+    -1px -1px 1px #222222ff;
+    letter-spacing: 3px;
+    padding: 10px;
+    flex: 0;
+}
+
+.white-button:hover {
+    opacity: 0.8;
+}

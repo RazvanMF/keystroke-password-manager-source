@@ -1,0 +1,53 @@
+body {
+    margin: 0;
+
+    user-select: none;
+    background-color: black;
+}
+
+.main-register {
+    width: 100vw;
+    height: 85vh;
+    background-color: black;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.registration-body {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.terms-and-conditions {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    scale: 90%;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.application-form {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    scale: 90%;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 5px;
+}
+
+.--hacked-text-bg {
+    background-color: black;
+}
+
+.--hacked-upper-margin {
+    margin-top: 10px;
+}
+

@@ -1,0 +1,30 @@
+.mainDenied {
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    font-family: 'Arial Narrow', 'sans-serif';
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 10px;
+}
+
+.--blinking {
+    animation: blink 0.33s steps(3, start) infinite
+}
+
+@keyframes blink {
+    0% {
+        visibility: visible;
+    }
+    50% {
+        visibility: hidden;
+    }
+    100% {
+        visibility: visible;
+    }
+}

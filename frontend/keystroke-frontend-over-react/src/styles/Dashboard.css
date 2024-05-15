@@ -1,0 +1,121 @@
+.main-dashboard {
+    height: 100vh;
+    width: 100vw;
+
+    background-color: black;
+    font-family: 'Arial Narrow', 'sans-serif';
+}
+
+
+
+.header-app {
+    display: flex;
+    flex-direction: row;
+    height: 13%;
+    gap: 50px;
+}
+
+.status-bar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 75%;
+    overflow: hidden;
+}
+
+.status-carousel {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.status-carousel:hover {
+    .scroller {
+        animation-play-state: paused;
+    }
+}
+
+.scroller {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+    animation: scroll-left 30s linear infinite;
+}
+
+@keyframes scroll-left {
+    from {
+        transform: translateX(115%);
+    }
+    to {
+        transform: translateX(-115%);
+    }
+}
+
+.logged-info {
+    padding: 10px;
+}
+
+.interface {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    height: 80%;
+}
+
+
+
+.add-account-form {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    margin-left: 25px;
+    scale: 90%;
+    gap:5px;
+}
+
+.modifiers-button-bar {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    margin-bottom: 10px;
+}
+
+
+.account-display-container {
+    width: 50%;
+    height: 100%;
+
+}
+
+.account-display-list {
+    list-style-type: none; /* Remove bullets */
+    padding: 0; /* Remove padding */
+    margin: 0; /* Remove margins */
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 90%;
+    scrollbar-width: none;
+}
+
+.bottom-margined {
+    margin-bottom: 15px;
+}
+
+
+
+
+.routing-buttons {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+
+    margin-right: 25px;
+}
+
+
