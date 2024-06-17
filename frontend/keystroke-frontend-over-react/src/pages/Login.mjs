@@ -13,14 +13,12 @@ function Login(props) {
             return;
         }
 
-        //`https://localhost:7013/api/users/${document.getElementById("usernameCase").value}-${document.getElementById("passwordCase").value}`
+        //{timeout: 1000}
         axios.get(`https://localhost:7013/api/users/login/${document.getElementById("usernameCase").value}&${document.getElementById("passwordCase").value}`, {timeout: 1000})
             .then(response => {
                 if (response.status === 200) {
                     console.log("success");
                     sessionStorage.setItem("token", response.data);
-                    //sessionStorage.setItem("user", `{"id": ${response.data.id}, "email": "${response.data.email}", "username": "${response.data.username}", "masterkey": "${response.data.masterKey}"}`);
-                    //console.log(props.userRef.current.id + " " + props.userRef.current.email)
                     navigate("/dashboard", {replace: true});
                 }
             })
@@ -35,6 +33,9 @@ function Login(props) {
                         break;
                     case "ECONNABORTED":
                         props.setStatusErr("MAINFRAME LINK SEVERED");
+                        break;
+                    default:
+                        props.setStatusErr("FATAL CRASH");
                         break;
                 }
                 navigate("/denied", {replace: true});

@@ -10,127 +10,154 @@ import {User} from "../domain/User.mjs";
 import AddAccountForm from "../components/AddAccountForm.mjs";
 import useState from "react-usestateref";
 import HandlerAccountForm from "../components/HandlerAccountForm.mjs";
-import {HubConnectionBuilder, LogLevel} from "@microsoft/signalr";
+import {HubConnectionBuilder, HubConnectionState, LogLevel} from "@microsoft/signalr";
+import LoadOfflineChanges from "../functions/LoadOfflineChanges.mjs";
+import RetrievePasswordFromBackend from "../functions/RetrievePasswordFromBackend.mjs";
+
+import {ConnectionSingleton} from "../domain/ConnectionSingleton.mjs";
 
 function Dashboard(props) {
     const [formState, setFormState, formStateRef] = useState(0);
     const [backendConnection, setBackendConnection, backendConnectionRef] = useState(false);
     const [internetConnection, setInternetConnection, internetConnectionRef] = useState(true);
+    const [offlineID, setOfflineID, offlineIDRef] = useState(0);
     let navigate = useNavigate();
+
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+
+    let connection = new HubConnectionBuilder()
+        .withUrl("https://localhost:7013/ping")
+        .configureLogging(LogLevel.Information)
+        .build();
 
     function HandleEndingSession() {
         props.setUser({});
         props.setMemory([]);
         sessionStorage.removeItem("token");
-        navigate("/", {replace: true});
+        connection.stop()
+            .then(response => {
+                navigate("/", {replace: true});
+            });
+    }
+
+    function HandleStatistics() {
+        // props.setUser({});
+        // props.setMemory([]);
+        navigate("/statistics", {replace: true});
     }
 
     useEffect(() => {
-        const token = sessionStorage.getItem("token");
-        if (token == null || token === "") {
-            props.setUser({});
-            props.setStatusErr("TOKEN AUTHORIZATION FAILURE");
-            navigate("/denied", {replace: true});
-            return () => {};
-        }
+            const token = sessionStorage.getItem("token");
+            // if ((token == null || token === "") && window.location.href.includes("dashboard")) {
+            //     props.setUser({});
+            //     props.setStatusErr("TOKEN AUTHORIZATION FAILURE");
+            //     navigate("/denied", {replace: true});
+            //     return () => {
+            //     };
+            // }
 
-        axios.get("https://localhost:7013/api/users/validate/" + token)
-            .then(response => {
-                props.setUser(new User(response.data.id, response.data.email, response.data.username, response.data.masterKey));
-            })
-            .catch(error => {
-                console.log(error.data);
-                props.setUser({});
-                props.setMemory([]);
-                props.setStatusErr("TOKEN AUTHORIZATION FAILURE");
-                navigate("/denied", {replace: true});
-            });
+            sessionStorage.setItem("offlineCache", "");
+            sessionStorage.setItem("offlineCacheID", "0");
 
-        const connection = new HubConnectionBuilder()
-            .withUrl("https://localhost:7013/ping")
-            .configureLogging(LogLevel.Information)
-            .build();
-
-        const getInternetConnection = () => {
-            setInternetConnection(navigator.onLine);
-        }
-
-        async function firstFetch() {
-            const information = [];
-            let retrievedID = -1;
-            await axios.get("https://localhost:7013/api/users/validate/" + token)
+            axios.get("https://localhost:7013/api/users/validate/" + token)
                 .then(response => {
-                    retrievedID = response.data.id;
+                    props.setUser(new User(response.data.id, response.data.email, response.data.username, response.data.masterKey));
+                })
+                .catch(error => {
+                    if (window.location.href.includes("dashboard") && typeof window !== 'undefined') {
+                        console.log(error.data);
+                        props.setUser({});
+                        props.setMemory([]);
+                        props.setStatusErr("TOKEN AUTHORIZATION FAILURE");
+                        navigate("/denied", {replace: true});
+                    }
                 });
-            if (retrievedID === props.userRef.current.ID) {
-                await axios.get("https://localhost:7013/api/accounts/foruser/" + props.userRef.current.ID)
-                    .then(response => {
-                        response.data.forEach(entry => information.push(
-                            new Account(entry.id, entry.service, entry.email, entry.username, entry.password)));
-                        props.setMemory(information);
-                    });
-            }
-            else {
-                props.setUser({});
-                props.setMemory([]);
-                props.setStatusErr("TOKEN AUTHORIZATION FAILURE");
-                navigate("/denied", {replace: true});
-            }
-        }
 
-        async function start() {
-            if (internetConnectionRef.current === true) {
-                try {
-                    await connection.start();
-                    setBackendConnection(true);
-                    await firstFetch();
-                    console.log("SignalR Connected.");
-                } catch (err) {
-                    console.log(err);
-                    setBackendConnection(false);
-                    setTimeout(start, 5000);
+            const getInternetConnection = () => {
+                setInternetConnection(navigator.onLine);
+            }
+
+            async function firstFetch() {
+                const information = [];
+                let retrievedID = -1;
+                await axios.get("https://localhost:7013/api/users/validate/" + token)
+                    .then(response => {
+                        retrievedID = response.data.id;
+                    });
+                if (retrievedID === props.userRef.current.ID) {
+                    await axios.get("https://localhost:7013/api/accounts/foruser/" + props.userRef.current.ID)
+                        .then(response => {
+                            response.data.forEach(entry => information.push(
+                                new Account(entry.id, entry.service, entry.email, entry.username, entry.password, "orange")));
+                            props.setMemory(information);
+                        });
+                }
+                else {
+                    if (window.location.href.includes("dashboard") && typeof window !== 'undefined') {
+                        props.setUser({});
+                        props.setMemory([]);
+                        props.setStatusErr("TOKEN AUTHORIZATION FAILURE");
+                        navigate("/denied", {replace: true});
+                    }
                 }
             }
-            else {
-                console.log("NO INTERNET CONNECTION");
+
+            async function start() {
+                if (internetConnectionRef.current === true && typeof window !== 'undefined') {
+                    try {
+                        await connection.start();
+                        setBackendConnection(true);
+                        if (backendConnectionRef.current === true && internetConnectionRef.current === true) {
+                            await firstFetch();
+                            await LoadOfflineChanges(props.userRef.current.ID, sessionStorage.getItem("token"));
+                        }
+                        console.log("SignalR Connected.");
+                    } catch (err) {
+                        console.log(err);
+                        setBackendConnection(false);
+                        setTimeout(start, 5000);
+                    }
+                } else {
+                    console.log("NO INTERNET CONNECTION");
+                }
             }
-        }
 
-        connection.on("ReceiveMessage", (data) => {
-            console.log("data: ", data);
-        });
+            connection.on("ReceiveMessage", (data) => {
+                console.log("data: ", data);
+            });
 
-        connection.on("InvokeGETRequest", (data) => {
-           firstFetch();
-        });
+            connection.on("InvokeGETRequest", (data) => {
+                if (backendConnectionRef.current === true && internetConnectionRef.current === true)
+                    firstFetch();
+            });
 
-        connection.onclose(async () => {
-            setBackendConnection(false);
-            await start();
-        });
+            connection.onclose(async () => {
+                setBackendConnection(false);
+                await start();
+            });
 
-        window.addEventListener("load", getInternetConnection);
-        window.addEventListener("online", () => {
-            getInternetConnection();
-            if (internetConnectionRef.current === true)
-                start();
-        });
-        window.addEventListener("offline", () => {
-            getInternetConnection();
-            if (internetConnectionRef.current === false)
-                connection.stop();
-        });
+            window.addEventListener("load", getInternetConnection);
+            window.addEventListener("online", () => {
+                getInternetConnection();
+                if (internetConnectionRef.current === true)
+                    start();
+            });
+            window.addEventListener("offline", () => {
+                getInternetConnection();
+                if (internetConnectionRef.current === false)
+                    connection.stop();
+            });
 
-        start();
+            start();
 
-        //cleanup
-        return (() => {
-            window.removeEventListener("load", getInternetConnection);
-            window.removeEventListener("online", getInternetConnection);
-            window.removeEventListener("offline", getInternetConnection);
-        });
-
-    }, [navigator.onLine], 100);
+            //cleanup
+            return (() => {
+                window.removeEventListener("load", getInternetConnection);
+                window.removeEventListener("online", getInternetConnection);
+                window.removeEventListener("offline", getInternetConnection);
+            });
+        //}
+    }, [navigator.onLine]);
 
     return (
         <>
@@ -164,23 +191,29 @@ function Dashboard(props) {
                             <button className={"orange-button"} onClick={() => {setFormState(1); console.log("modify")}}>MODIFY</button>
                         </div>
                         <HandlerAccountForm formStateRef={formStateRef} userID={props.userRef.current.ID} token={sessionStorage.getItem("token")}
-                                            statusErr={props.statusErr} setStatusErr={props.setStatusErr} navigate={navigate}/>
+                                            statusErr={props.statusErr} setStatusErr={props.setStatusErr} navigate={navigate}
+                                            backendConnectionRef={backendConnectionRef} internetConnectionRef={internetConnectionRef}
+                                            memory={props.memory} setMemory={props.setMemory}/>
                     </div>
 
                     <div className={"account-display-container"}>
                         <div className={"bottom-margined text-element --big --orange --bordered-orange"}>ACCOUNTS</div>
                         <ul className={"account-display-list"}>
-                            <AccountStockList memory={props.memory} userID={props.userRef.current.ID}
-                                              token={sessionStorage.getItem("token")} setStatusErr={props.setStatusErr} navigate={navigate}/>
+                            <AccountStockList memory={props.memory} setMemory={props.setMemory} userID={props.userRef.current.ID}
+                                              token={sessionStorage.getItem("token")} setStatusErr={props.setStatusErr} navigate={navigate}
+                                              setFormState={setFormState}
+                                              backendConnectionRef={backendConnectionRef} internetConnectionRef={internetConnectionRef}/>
                         </ul>
                     </div>
 
                     <div className={"routing-buttons"}>
-                        <button className={"orange-button"}>GENERIC BUTTON 1</button>
-                        <button className={"orange-button"}>GENERIC BUTTON 2</button>
-                        <button className={"orange-button"}>GENERIC BUTTON 3</button>
-                        <button className={"orange-button"}>GENERIC BUTTON 4</button>
+                        <button onClick={HandleStatistics} className={"orange-button"}>CHECK STATISTICS</button>
+                        <button className={"orange-button"}>CHECK BREACHES</button>
+                        <button className={"orange-button"}>PREPARE SECURITY REPORT</button>
+                        <button onClick={RetrievePasswordFromBackend} className={"orange-button"}>GENERATE PASSWORD</button>
                         <button onClick={HandleEndingSession} className={"red-button"}>END SESSION</button>
+                        <div className={"text-element --orange --medium --at-end"}>CONSOLE:</div>
+                        <div id={"console"} className={"ua-console"}></div>
                     </div>
 
                 </div>

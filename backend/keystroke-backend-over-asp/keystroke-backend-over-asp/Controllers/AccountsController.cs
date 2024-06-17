@@ -64,11 +64,11 @@ namespace keystroke_backend_over_asp.Controllers
             if (!UserExists(accountRef.UserID))
                 return BadRequest();
 
-            Account searchTemp = new Account { Service = account.Service, Username = account.Username, Email = account.Email, Password = account.Password, UserID = account.UserID };
-            if (_context.Accounts.ToList().Where(acc => acc == searchTemp).Count() > 0)
-            {
-                return BadRequest();
-            }
+            //Account searchTemp = new Account { Service = account.Service, Username = account.Username, Email = account.Email, Password = account.Password, UserID = account.UserID };
+            //if (_context.Accounts.ToList().Where(acc => acc == searchTemp && acc.ID != searchTemp.ID).Count() > 0)
+            //{
+            //    return BadRequest();
+            //}
 
             accountRef.Service = account.Service;
 
@@ -139,6 +139,7 @@ namespace keystroke_backend_over_asp.Controllers
 
             _context.Accounts.Remove(account);
             await _context.SaveChangesAsync();
+
 
             await _hubContext.Clients.All.SendAsync("InvokeGETRequest");
             return NoContent();

@@ -1,0 +1,35 @@
+body {
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+
+    user-select: none;
+}
+
+.main-statistics {
+    width: 100vw;
+    height: 75vh;
+
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.password-statistics {
+    width: 30%;
+    height: 100%;
+}
+
+.email-statistics {
+    width: 30%;
+    height: 100%;
+}
+
+.username-statistics {
+    width: 30%;
+    height: 100%;
+}

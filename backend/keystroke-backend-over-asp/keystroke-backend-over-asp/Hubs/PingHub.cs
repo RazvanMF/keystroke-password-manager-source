@@ -28,5 +28,10 @@ namespace keystroke_backend_over_asp.Hubs
             await Clients.All.SendAsync("ReceiveMessage", user, message);
         }
 
+        public async Task Disconnect()
+        {
+            await Clients.All.SendAsync("Kill");
+        }
+
     }
 }

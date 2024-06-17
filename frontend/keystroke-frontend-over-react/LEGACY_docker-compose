@@ -1,0 +1,6 @@
+name: keystroke
+services:
+  keystroke-frontend-over-react:
+    ports:
+      - 3000:3000
+    image: keystroke-frontend-over-react:latest

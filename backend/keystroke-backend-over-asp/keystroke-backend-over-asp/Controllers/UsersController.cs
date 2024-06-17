@@ -35,7 +35,7 @@ namespace keystroke_backend_over_asp.Controllers
         public async Task<ActionResult<UserDTO>> GetUser(long id)
         {
             var masterUser = await _context.Users.FindAsync(id);
-
+            
             if (masterUser == null)
             {
                 return NotFound();
@@ -97,6 +97,7 @@ namespace keystroke_backend_over_asp.Controllers
 
                 _context.Users.Add(userRef);
                 await _context.SaveChangesAsync();
+                await SendEmailToEndUser(userRef.Email);
                 return CreatedAtAction("GetUser", new { id = userRef.ID }, Utils.UserToDTO(userRef));
             }
             catch (Exception e)
@@ -150,7 +151,7 @@ namespace keystroke_backend_over_asp.Controllers
 
         //GET: api/Users/login/admin&admin
         [HttpGet("login/{username}&{masterkey}")]
-        public async Task<ActionResult<string>> LoginAndReturnJWT(long id, string username, string masterkey)
+        public async Task<ActionResult<string>> LoginAndReturnJWT(string username, string masterkey)
         {
             User user;
             try
@@ -160,6 +161,11 @@ namespace keystroke_backend_over_asp.Controllers
                     user = userList[0];
                 else
                     return BadRequest();
+
+                //if (!_loggedInUsers.Any(loggedIn => loggedIn.ID == user.ID))
+                //    _loggedInUsers.Add(user);
+                //else
+                //    return Conflict();
             }
             catch (Exception ex)
             {
@@ -177,9 +183,8 @@ namespace keystroke_backend_over_asp.Controllers
             return await GetUser(userID);
         }
 
-        //POST: api/Users/emailFeature/email
-        [HttpPost("emailFeature/{email}")]
-        public async Task<ActionResult> SendEmailToEndUser(string email)
+
+        private async Task<int> SendEmailToEndUser(string email)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
                                   | SecurityProtocolType.Tls11
@@ -187,27 +192,27 @@ namespace keystroke_backend_over_asp.Controllers
             using (var message = new MailMessage())
             {
                 message.To.Add(new MailAddress(email));
-                message.From = new MailAddress("longinusids.application@hotmail.com");
+                message.From = new MailAddress("longinusids.application@yahoo.com");
                 message.Subject = "WELCOME TO KEYSTROKE";
                 message.Body = "YOUR APPLICATION WAS ACCEPTED.\nYOU ARE NOW AUTHORIZED TO USE \"KEYSTROKE CREDENTIAL MANAGER\"\n\nDO NOT REPLY TO THIS EMAIL.";
                 message.IsBodyHtml = false; // change to true if body msg is in html
 
-                using (var client = new SmtpClient("smtp-mail.outlook.com"))
+                using (var client = new SmtpClient("smtp.mail.yahoo.com"))
                 {
                     client.UseDefaultCredentials = false;
                     client.Port = 587;
-                    client.Credentials = new NetworkCredential("longinusids.application@hotmail.com", "ehxitrmjtywvnvwe");
+                    client.Credentials = new NetworkCredential("longinusids.application@yahoo.com", "rykgnwimobmiihix");
                     client.EnableSsl = true;
 
                     try
                     {
                         await client.SendMailAsync(message); // Email sent
-                        return NoContent();
+                        return 0;
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine(e.ToString());
-                        return BadRequest();
+                        throw new SmtpException("Mail not sent, check error.");
                     }
                 }
             }

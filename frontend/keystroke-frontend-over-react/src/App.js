@@ -9,11 +9,14 @@ import Register from "./pages/Register.mjs";
 import Dashboard from "./pages/Dashboard.mjs";
 import Recovery from "./pages/Recovery.mjs";
 import Denied from "./pages/Denied.mjs";
+import Statistics from "./pages/Statistics.mjs";
 
 function App() {
+
     const [token, setToken, tokenRef] = useState(0);
     const [statusErr, setStatusErr, statusErrRef] = useState("");
     const [memory, setMemory, memoryRef] = useState([]);
+    const [offlineChanges, setOfflineChanges, offlineChangesRef] = useState([]);
     const [user, setUser, userRef] = useState({});
     return (
         <BrowserRouter>
@@ -24,9 +27,11 @@ function App() {
                 <Route path="register" element={<Register setStatusErr={setStatusErr}/>} />
                 <Route path="dashboard" element={<Dashboard user={user} setUser={setUser} userRef={userRef}
                                                             memory={memory} setMemory={setMemory} memoryRef={memoryRef}
-                                                            statusErr={statusErr} setStatusErr={setStatusErr}/>} />
+                                                            statusErr={statusErr} setStatusErr={setStatusErr}
+                                                            offlineChanges={offlineChanges} setOfflineChanges={setOfflineChanges} offlineChangesRef={offlineChangesRef}/>} />
                 <Route path="recovery" element={<Recovery />} />
                 <Route path="denied" element={<Denied statusErr={statusErr} setStatusErr={setStatusErr}/>}></Route>
+                <Route path="statistics" element={<Statistics user={user}/>}></Route>
             </Route>
             </Routes>
         </BrowserRouter>

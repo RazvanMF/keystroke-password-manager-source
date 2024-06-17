@@ -1,4 +1,4 @@
-export default function TransferModifyDataToForm(ID, service, email, username, password) {
+export default function TransferModifyDataToForm(ID, service, email, username, password, setFormState) {
     try {
         document.getElementById("modifyID").value = ID;
         document.getElementById("modifyService").value = service;
@@ -6,5 +6,6 @@ export default function TransferModifyDataToForm(ID, service, email, username, p
         document.getElementById("modifyUsername").value = username;
         document.getElementById("modifyPassword").value = password;
     }
-    catch (e) {}
+    catch (e) {
+    }
 }

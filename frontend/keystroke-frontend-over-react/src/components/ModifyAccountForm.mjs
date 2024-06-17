@@ -13,7 +13,7 @@ function ModifyAccountForm(props) {
             <input id={"modifyUsername"} className={"input-orange"} type={"text"}></input>
             <div className={"text-element --medium --orange --bordered-orange"}>PASSWORD</div>
             <input id={"modifyPassword"} className={"input-orange"} type={"text"}></input>
-            <button className={"orange-button"} onClick={() => ModifyAccountFunctionality(props.userID, props.token, props.setStatusErr, props.navigate)}>MODIFY ACCOUNT</button>
+            <button className={"orange-button"} onClick={() => ModifyAccountFunctionality(props.userID, props.token, props.setStatusErr, props.navigate, props.backendConnectionRef, props.internetConnectionRef, props.memory, props.setMemory)}>MODIFY ACCOUNT</button>
         </>
     );
 }

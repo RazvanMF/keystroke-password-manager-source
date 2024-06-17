@@ -20,6 +20,8 @@ namespace keystroke_backend_over_asp.Models
             return lhs.Email == rhs.Email || lhs.Username == rhs.Username || lhs.ID == rhs.ID;
         }
 
+        
+
         public static bool operator!= (User lhs, User? rhs) {  return !(lhs == rhs); }
     }
 }

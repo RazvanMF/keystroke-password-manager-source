@@ -24,6 +24,7 @@ function Register(props) {
             .then(response => {
                 result = response.data;
                 console.log(result);
+                navigate("/", {replace: true});
             })
             .catch(error => {
             console.log(error.code);
@@ -44,8 +45,6 @@ function Register(props) {
             }
             navigate("/denied", {replace: true});
         });
-        // axios.post('https://localhost:7013/api/users/emailfeature/' + email)
-        //     .then(response => console.log(response.status))
     }
 
     function HandleReturn() {
